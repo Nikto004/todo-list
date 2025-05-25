@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+
+{% block content %}
+
+<h1 class="mb-4">{{ task.title }}</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p class="card-text">{{ task.description|default:"<i>Без описания</i>"|safe }}</p>
+        <p>
+            Статус: 
+            <span class="badge 
+                {% if task.is_completed %}
+                    bg-success
+                {% else %}
+                    bg-secondary
+                {% endif %}
+            ">
+                {% if task.is_completed %}Выполнено{% else %}Не выполнено{% endif %}
+            </span>
+        </p>
+        <a href="{% url 'update_task' task.id %}" class="btn btn-warning">✏️ Редактировать</a>
+        <a href="{% url 'delete_task' task.id %}" class="btn btn-danger">🗑 Удалить</a>
+        <a href="{% url 'tasks' %}" class="btn btn-outline-secondary">← Назад</a>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+
+{% block content %}
+<h1 class="mb-4">{{ title }}</h1>
+
+<div class="mb-3">
+    <button class="btn btn-outline-primary filter-btn" data-filter="all">Все</button>
+    <button class="btn btn-outline-success filter-btn" data-filter="completed">Выполненные</button>
+    <button class="btn btn-outline-secondary filter-btn" data-filter="active">Не выполненные</button>
+</div>
+
+<ul class="list-group" id="task-list">
+    {% include 'tasks/includes/task_list_items.html' %}
+</ul>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function setupToggleHandlers() {
+  document.querySelectorAll('.toggle-status').forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+      const url = this.dataset.url;
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // можно обновить метку или перерисовать элемент
+          location.reload(); // или вручную изменить DOM
+        }
+      });
+    });
+  });
+}
+
+function setupFilterButtons() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const status = this.dataset.filter;
+            fetch(`/api/?status=${status}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('task-list').innerHTML = data.html;
+                setupToggleHandlers(); // ← Повторно навешиваем события
+            });
+        });
+    });
+}
+
+// CSRF helper
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+// Инициализация
+document.addEventListener('DOMContentLoaded', setupToggleHandlers);
+setupFilterButtons();
+</script>
+{% endblock %}

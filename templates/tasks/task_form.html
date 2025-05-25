@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+
+{% block content %}
+
+<h1 class="mb-4">{{ title }}</h1>
+
+<form method="post" class="card card-body shadow-sm">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        {{ form.title.label_tag }}
+        {{ form.title }}
+        {% if form.title.errors %}
+            <div class="text-danger">{{ form.title.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {% if form.description.errors %}
+            <div class="text-danger">{{ form.description.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-check form-switch mb-3">
+        {{ form.is_completed }}
+        <label class="form-check-label" for="id_is_completed">
+            {{ form.is_completed.label }}
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-success">💾 Сохранить</button>
+</form>
+
+<a href="{% url 'tasks' %}" class="btn btn-link mt-3">← Назад к списку</a>
+
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ title }}{% endblock title %}
+
+
+{% block content %}
+
+<h1 class="mb-4 text-danger">{{ title }}</h1>
+
+<div class="alert alert-warning">
+    <strong>Вы уверены, что хотите удалить задачу:</strong> <br>
+    "{{ task.title }}"?
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Да, удалить</button>
+    <a href="{% url 'task' task.id %}" class="btn btn-secondary">Отмена</a>
+</form>
+
+{% endblock content %}
