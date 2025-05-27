@@ -1,12 +1,18 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 
 {% block content %}
 <h2>Вход</h2>
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
+  {{ form|crispy }}
   <button type="submit">Войти</button>
 </form>
+{% if form.errors %}
+  <div class="alert alert-danger mt-3">
+    Неверное имя полльзователя или пароль.
+  </div>
+{% endif %}
 <p>Нет акаунта? <a href="{% url 'register' %}">Регистрация</a></p>
 {% endblock content %}
