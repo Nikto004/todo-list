@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
+    'debug_toolbar',
     
     'tasks.apps.TasksConfig',
     'users.apps.UsersConfig'
